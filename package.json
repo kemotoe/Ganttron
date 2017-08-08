@@ -1,0 +1,63 @@
+{
+    "name": "ganttron",
+    "productName": "ganttron",
+    "version": "1.0.0",
+    "description": "Desktop application for the easy creation of gantt charts",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "lint": "eslint src"
+    },
+    "keywords": [],
+    "author": "kemotoe",
+    "license": "MIT",
+    "config": {
+        "forge": {
+            "make_targets": {
+                "win32": [
+                    "squirrel"
+                ],
+                "darwin": [
+                    "zip"
+                ],
+                "linux": [
+                    "deb",
+                    "rpm"
+                ]
+            },
+            "electronPackagerConfig": {
+                "icon": "./src/img/gantt-32x32.png",
+                "packageManager": "yarn"
+            },
+            "electronWinstallerConfig": {
+                "name": "ganttron"
+            },
+            "electronInstallerDebian": {},
+            "electronInstallerRedhat": {},
+            "github_repository": {
+                "owner": "kemotoe",
+                "name": "ganttron"
+            },
+            "windowsStoreConfig": {
+                "packageName": "",
+                "name": "ganttron"
+            }
+        }
+    },
+    "dependencies": {
+        "electron-compile": "^6.4.1"
+    },
+    "devDependencies": {
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
+        "babel-preset-env": "^1.6.0",
+        "babel-preset-react": "^6.24.1",
+        "electron-prebuilt-compile": "1.6.11",
+        "eslint": "3",
+        "eslint-config-airbnb": "15",
+        "eslint-plugin-import": "2",
+        "eslint-plugin-jsx-a11y": "5",
+        "eslint-plugin-react": "7"
+    }
+}
