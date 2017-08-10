@@ -1,6 +1,4 @@
 import { app, BrowserWindow } from 'electron';
-import path from 'path';
-import url from 'url';
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -10,16 +8,21 @@ let mainWindow;
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    icon: `${__dirname}/img/gantt.png`,
+    show: false,
+    icon: `${__dirname}/img/gantt.png.ico`,
   });
+
+  mainWindow.maximize();
+  mainWindow.show();
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
+
+ // Prevent new window from opening when exporting to excel
+  
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {

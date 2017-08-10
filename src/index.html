@@ -1,10 +1,115 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Ganttron</title>
-  </head>
-  <body>
-    Well hey there!!!
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <title>Ganttron</title>
+  <script src="./codebase/dhtmlxgantt.js"></script>
+  <script src="//export.dhtmlx.com/gantt/api.js"></script>
+  <link href="./codebase/dhtmlxgantt.css" rel="stylesheet">
+  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="demo form-bg" id="configure">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-lg-12">
+          <h1 class="dark">Configure your Gantt chart</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <form class="form-horizontal" id="form" onsubmit="init_gantt()">
+            <div class="form-group">
+              <label class="col-md-3 col-sm-2 control-label" for="exampleInputFirstName2">First Name</label>
+              <div class="col-md-9 col-sm-10">
+                <input type="text" class="form-control" id="exampleInputFirstName2" placeholder="Eg.Steve">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 col-sm-2 control-label" for="exampleInputLastName2">Last Name</label>
+              <div class="col-md-9 col-sm-10">
+                <input type="text" class="form-control" id="exampleInputLastName2" placeholder="Eg.Thomas">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 col-sm-2 control-label">Gender</label>
+              <div class="col-md-9 col-sm-10">
+                <input class="check" type="radio" id="check1" name="radio">
+                <label for="check1">Male</label>
+
+                <input class="check" type="radio" id="check2" name="radio">
+                <label for="check2">Female</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 col-sm-2 control-label" for="exampleInputName2">Date of Birth</label>
+              <div class="col-md-3 col-sm-3">
+                <input type="text" class="form-control" id="exampleInputName2" placeholder="DD">
+              </div>
+              <div class="col-md-3 col-sm-3">
+                <input type="text" class="form-control" id="exampleInputName2" placeholder="MM">
+              </div>
+              <div class="col-md-3 col-sm-3">
+                <input type="text" class="form-control" id="exampleInputName2" placeholder="YYYY">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 col-sm-2 control-label">Languages</label>
+              <div class="col-md-9 col-sm-10">
+                <select class="form-control">
+                                    <option>English(US)</option>
+                                    <option>English(Uk)</option>
+                                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-md-offset-3 col-sm-offset-2 col-sm-3">
+                <button type="submit" class="btn btn-default">Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="taskbar">
+    <input value="Export to Excel" id="excel" type="button" onclick="gantt.exportToExcel()" style="margin:20px;">
+  </div>
+  <div id="gantt">
+  </div>
+  <script>
+    window.$ = window.jQuery = require('../node_modules/jquery/dist/jquery.min');
+    $('#taskbar').hide();
+
+    $(document).ready(() => {
+      $("#form").submit((e) => {
+        $("#configure").remove();
+        $('#taskbar').show();
+      });
+    });
+
+    const init_gantt = () => {
+      gantt.init("gantt")
+    }
+    
+    $('#excel').click((e) => {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('click',((e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setTimeout(() => {
+            let path = e.target.href;
+            ipcRenderer.sendToHost('element-clicked', path);
+          }, 100);
+          return false;
+        }, true));
+      });
+    });
+  </script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+
 </html>

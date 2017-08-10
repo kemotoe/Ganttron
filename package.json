@@ -28,7 +28,6 @@
                 ]
             },
             "electronPackagerConfig": {
-                "icon": "./src/img/gantt-32x32.png",
                 "packageManager": "yarn"
             },
             "electronWinstallerConfig": {
@@ -47,7 +46,9 @@
         }
     },
     "dependencies": {
-        "electron-compile": "^6.4.1"
+        "bootstrap": "^3.3.7",
+        "electron-compile": "^6.4.1",
+        "jquery": "^3.2.1"
     },
     "devDependencies": {
         "babel-plugin-transform-async-to-generator": "^6.24.1",
