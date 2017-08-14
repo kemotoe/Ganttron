@@ -1,22 +1,73 @@
 html,
 body {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   height: 100%;
-
-}
-
-.taskbar-wrapper {
-  text-align: center;
-}
-
-.taskbar {
-  background: #1b365d;
-
 }
 
 #gantt {
   width: 100%;
-  height: 93%;
+  height: 92%;
 }
 
+.gantt_cell {
+  cursor: pointer;
+}
+
+.gantt_btn_set.gantt_delete_btn_set {
+  background: #d9534f;
+  opacity: 0.9;
+}
+
+.gantt_btn_set.gantt_delete_btn_set:hover {
+  opacity: 1;
+}
+
+.taskbar-wrapper .btn-primary {
+  float: right;
+}
+
+.taskbar {
+  background: #1b365d;
+}
+
+.taskbar button {
+  margin: 20px;
+}
+
+.deadline {
+  position: absolute;
+  border-radius: 12px;
+  border: 2px solid #585858;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  margin-top: 6px;
+  z-index: 1;
+  background: url("../img/deadline_icon.png") center no-repeat;
+}
+
+.fa {
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  opacity: 0.5;
+  padding: 5px;
+}
+
+.fa:hover {
+  opacity: 1;
+}
+
+.fa-pencil {
+  color: #ffa011;
+}
+
+.fa-plus {
+  color: #328ea0;
+}
+
+.fa-times {
+  color: red;
+}
