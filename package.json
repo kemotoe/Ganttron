@@ -34,17 +34,17 @@
                 "packageManager": "yarn"
             },
             "electronWinstallerConfig": {
-                "name": "ganttron"
+                "name": "Ganttron"
             },
             "electronInstallerDebian": {},
             "electronInstallerRedhat": {},
             "github_repository": {
                 "owner": "kemotoe",
-                "name": "ganttron"
+                "name": "Ganttron"
             },
             "windowsStoreConfig": {
                 "packageName": "",
-                "name": "ganttron"
+                "name": "Ganttron"
             }
         }
     },
