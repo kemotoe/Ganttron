@@ -2693,10 +2693,6 @@ log-symbols@^1.0.2:
   dependencies:
     chalk "^1.0.0"
 
-lokijs@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/lokijs/-/lokijs-1.5.0.tgz#99e403d6a89e47e11ed0c5d499fb55a0603d5efc"
-
 longest@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"

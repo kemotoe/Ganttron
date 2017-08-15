@@ -12,17 +12,15 @@ const createWindow = () => {
     icon: `${__dirname}/img/gantt.png.ico`,
   });
 
-  mainWindow.maximize();
-  mainWindow.show();
-
-  // and load the index.html of the app.
+  // Load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  // Wait for window to load before we show
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.maximize();
+    mainWindow.show();
+  });
 
- // Prevent new window from opening when exporting to excel
-  
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {

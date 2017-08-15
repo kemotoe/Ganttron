@@ -14,7 +14,7 @@
     "author": "kemotoe",
     "license": "MIT",
     "stylelint": {
-      "extends": "stylelint-config-standard"
+        "extends": "stylelint-config-standard"
     },
     "config": {
         "forge": {
@@ -51,8 +51,7 @@
     "dependencies": {
         "bootstrap": "^3.3.7",
         "electron-compile": "^6.4.1",
-        "jquery": "^3.2.1",
-        "lokijs": "^1.5.0"
+        "jquery": "^3.2.1"
     },
     "devDependencies": {
         "babel-plugin-transform-async-to-generator": "^6.24.1",
