@@ -6,18 +6,17 @@ import { app, BrowserWindow } from 'electron';
 let mainWindow;
 
 const createWindow = () => {
-  // Create the browser window.
+  // Create the browser window set show to false and load our icon
   mainWindow = new BrowserWindow({
     show: false,
     icon: `${__dirname}/img/gantt.png.ico`,
   });
 
-  // Load the index.html of the app.
+  // Load the index.html of the app maximize the window before loading the page
+  mainWindow.maximize();
   mainWindow.loadURL(`file://${__dirname}/index.html`);
-
   // Wait for window to load before we show
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.maximize();
     mainWindow.show();
   });
 
