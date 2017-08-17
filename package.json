@@ -50,6 +50,7 @@
     },
     "dependencies": {
         "bootstrap": "^3.3.7",
+        "bootstrap-select": "^1.12.4",
         "electron-compile": "^6.4.1",
         "jquery": "^3.2.1"
     },

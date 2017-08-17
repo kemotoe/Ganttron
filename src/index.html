@@ -5,30 +5,43 @@
   <meta charset="utf-8">
   <title>Ganttron</title>
   <script src="./codebase/dhtmlxgantt.js"></script>
-  <script src='./codebase/dhtmlxSuite.js'></script>
-  <script src="//export.dhtmlx.com/gantt/api.js"></script>
+  <script src="https://export.dhtmlx.com/gantt/api.js"></script>
   <link href="./codebase/dhtmlxgantt.css" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-  <div class="taskbar-wrapper">
   <div class="taskbar">
-    <button class="btn btn-primary" onclick="gantt.exportToPNG()">Export to PNG</button>
-    <button class="btn btn-primary" onclick="gantt.exportToPDF()">Export to PDF</button>
-    <button class="btn btn-primary" onclick="gantt.exportToExcel()">Export to Excel</button>
-    <button class="btn btn-success" onclick="clearGantt()">Clear Gantt</button>
+    <select class="selectpicker" id="export" data-style="btn-success" onchange="exportTo()" title="Export to...">
+      <option value="pdf">PDF</option>
+      <option value="png">PNG</option>
+      <option value="excel">Excel</option>
+      <option value="ical">iCal</option>
+    </select>
+    <select class="selectpicker" id="skin" data-style="btn-success" onchange="selectSkin()" title="Change Skin">
+      <option value="terrace">Terrace (Default)</option>
+      <option value="meadow">Meadow</option>
+      <option value="skyblue">Skyblue</option>
+      <option value="broadway">Broadway</option>
+      <option value="contrast_white">Contrast White</option>
+      <option value="contrast_black">Contrast Black</option>
+    </select>
   <!--  <button class="btn btn-success" onclick="gantt.createTask()">Create New Task</button> -->
     <button class="btn btn-success" onclick="saveGantt()">Save Gantt Chart</button>
     <button class="btn btn-success" onclick="loadGantt()">Load Gantt Chart</button>
-  </div>
+    <button class="btn btn-success" onclick="clearGantt()">Clear Gantt</button>
   </div>
   <div id="gantt">
   </div>
   <script>
     window.$ = window.jQuery = require('../node_modules/jquery/dist/jquery.min');
+
+    const fs = require('fs');
+    const { dialog } = require('electron').remote;
+
 
     gantt.locale.labels.deadline_enable_button = 'Set';
 	  gantt.locale.labels.deadline_disable_button = 'Remove';
@@ -37,7 +50,7 @@
     gantt.config.lightbox.sections = [
       { name: "description", height: 70, map_to: "text", type: "textarea", focus: true },
       { name: "time", map_to: "auto", type: "duration" },
-      { name: "deadline", map_to: { end_date:"deadline" }, type: "duration_optional", button: true, single_date: true }
+      { name: "deadline", map_to: { start_date: "deadline" }, type: "duration_optional", button: true, single_date: true }
     ];
 
     let colHeader = `<div class="gantt_grid_head_cell gantt_grid_head_add" onclick="gantt.createTask()"></div>`,
@@ -47,7 +60,90 @@
               <i class="fa gantt_button_grid gantt_grid_delete fa-times" onclick="clickGridButton(${task.id}, 'delete')"></i>`);
     };
 
-    const clickGridButton = (id, action) => {
+    gantt.config.columns = [
+      {name: "overdue", label: "", width: 30, template: function (obj) {
+			  if (obj.deadline) {
+				  let deadline = gantt.date.parseDate(obj.deadline, "xml_date");
+				  if (deadline && obj.end_date > deadline) {
+					  return '<div class="overdue-indicator">!</div>';
+				  }
+			  }
+			  return '<div></div>'; }},
+      { name: "text", label: "Task Name", width: '*', tree: true,  resize: true },
+      { name: "start_date", label: "Start Time", align: "center", width: "80" },
+      { name: "deadline", label: "Deadline", align: "center", width: "80", },
+      { name: "duration", label: "Duration", align: "center", width: "60" },
+      { name: "buttons", label: colHeader, width: 75, template: colContent }
+    ];
+    
+    gantt.addTaskLayer(function draw_deadline(task) {
+		  if (task.deadline) {
+			  let el = document.createElement('div');
+			  el.className = 'deadline';
+			  let sizes = gantt.getTaskPosition(task, task.deadline);
+
+			  el.style.left = sizes.left + 'px';
+			  el.style.top = sizes.top + 'px';
+
+			  el.setAttribute('title', gantt.templates.task_date(task.deadline));
+			  return el;
+		  }
+		  return false;
+	  });
+
+	  gantt.templates.task_class = (start, end, task) => {
+		  if (task.deadline && end.valueOf() > task.deadline.valueOf()) {
+			  return 'overdue';
+		  }
+	  };
+
+	  gantt.templates.rightside_text = (start, end, task) => {
+		  if (task.deadline) {
+			  if (end.valueOf() > task.deadline.valueOf()) {
+				  let overdue = Math.ceil(Math.abs((end.getTime() - task.deadline.getTime()) / (24 * 60 * 60 * 1000)));
+				  let text = "<b>Overdue: " + overdue + " day(s)</b>";
+				  return text;
+			  }
+		  }
+	  };
+
+	  gantt.attachEvent("onTaskLoading", (task) => {
+		  if(task.deadline)
+			  task.deadline = gantt.date.parseDate(task.deadline, "xml_date");
+		  return true;
+	  });
+
+    gantt.config.scale_unit = "month";
+    gantt.config.step = 1;
+    gantt.config.date_scale = "%F, %Y";
+    gantt.config.scale_height = 80;
+    gantt.config.grid_height
+
+    const weekScaleTemplate = (date) => {
+		  let dateToStr = gantt.date.date_to_str("%d %M");
+			let endDate = gantt.date.add(gantt.date.add(date, 1, "week"), -1, "day");
+			return dateToStr(date) + " - " + dateToStr(endDate);
+		}
+
+    gantt.config.subscales = [
+      { unit: "week", step: 1, template: weekScaleTemplate},
+      { unit: "day", step: 1, date: "%D, %d"}
+    ];
+
+    gantt.ignore_time = function(date){
+			if(date.getDay() == 0 || date.getDay() == 6)
+				return true;
+			return false;
+		};
+
+    gantt.config.grid_width = 480;
+    gantt.config.fit_tasks = true;
+    gantt.config.order_branch = true;
+    gantt.config.order_branch_free = true;
+    
+    gantt.init("gantt");
+
+     const clickGridButton = (id, action) => {
       switch (action) {
         case "edit":
           gantt.showLightbox(id);
@@ -68,104 +164,47 @@
       }
     }
 
-    gantt.config.columns = [
-      {name: "overdue", label: "", width: 30, template: function (obj) {
-			  if (obj.deadline) {
-				  var deadline = gantt.date.parseDate(obj.deadline, "xml_date");
-				  if (deadline && obj.end_date > deadline) {
-					  return '<div class="overdue-indicator">!</div>';
-				  }
-			  }
-			  return '<div></div>'; }},
-      { name: "text", label: "Task Name", width: '*', tree: true,  resize: true },
-      { name: "start_date", label: "Start Time", align: "center", width: "80" },
-      { name: "deadline", label: "Deadline", align: "center", width: "80", },
-      { name: "duration", label: "Duration", align: "center", width: "60" },
-      { name: "buttons", label: colHeader, width: 75, template: colContent }
-    ];
-    
-    gantt.addTaskLayer(function draw_deadline(task) {
-		  if (task.deadline) {
-			  var el = document.createElement('div');
-			  el.className = 'deadline';
-			  var sizes = gantt.getTaskPosition(task, task.deadline);
-
-			  el.style.left = sizes.left + 'px';
-			  el.style.top = sizes.top + 'px';
-
-			  el.setAttribute('title', gantt.templates.task_date(task.deadline));
-			  return el;
-		  }
-		  return false;
-	  });
-
-	  gantt.templates.task_class = function (start, end, task) {
-		  if (task.deadline && end.valueOf() > task.deadline.valueOf()) {
-			  return 'overdue';
-		  }
-	  };
-
-	  gantt.templates.rightside_text = function (start, end, task) {
-		  if (task.deadline) {
-			  if (end.valueOf() > task.deadline.valueOf()) {
-				  var overdue = Math.ceil(Math.abs((end.getTime() - task.deadline.getTime()) / (24 * 60 * 60 * 1000)));
-				  var text = "<b>Overdue: " + overdue + " days</b>";
-				  return text;
-			  }
-		  }
-	  };
-
-	  gantt.attachEvent("onTaskLoading", function(task){
-		  if(task.deadline)
-			  task.deadline = gantt.date.parseDate(task.deadline, "xml_date");
-		  return true;
-	  });
-
-    gantt.attachEvent("onLightboxButton", (buttonID, node, e) => {
-      if(buttonID === "deadline_btn") {
-        let id = gantt.getState().lightbox;
-
-      }
-    })
-
-    gantt.config.scale_unit = "month";
-    gantt.config.step = 1;
-    gantt.config.date_scale = "%F, %Y";
-    gantt.config.scale_height = 80;
-    gantt.config.grid_height
-
-    var weekScaleTemplate = function(date){
-			var dateToStr = gantt.date.date_to_str("%d %M");
-			var endDate = gantt.date.add(gantt.date.add(date, 1, "week"), -1, "day");
-			return dateToStr(date) + " - " + dateToStr(endDate);
-		};
-
-    gantt.config.subscales = [
-      { unit: "week", step: 1, template:weekScaleTemplate},
-      { unit: "day", step: 1, date: "%D, %d"}
-    ];
-
-    gantt.ignore_time = function(date){
-			if(date.getDay() == 0 || date.getDay() == 6)
-				return true;
-			return false;
-		};
-
-
-    gantt.config.grid_width = 480;
-    gantt.config.fit_tasks = true;
-    gantt.config.order_branch = true;
-    gantt.config.order_branch_free = true;
-    
-    gantt.init("gantt");
-
-
     const clearGantt = () => {
       gantt.clearAll();
     }
 
-    const fs = require('fs');
-    const { dialog } = require('electron').remote;
+    const selectSkin = () => {
+      let skin = document.querySelector('#skin').value;
+      switch(skin) {
+        case 'terrace': changeSkin('terrace'); break;
+        case 'meadow': changeSkin('meadow'); break;
+        case 'skyblue': changeSkin('skyblue'); break;
+        case 'broadway': changeSkin('broadway'); break;
+        case 'contrast_white': changeSkin('contrast_white'); break;
+        case 'contrast_black': changeSkin('contrast_black'); break;
+        default: dialog.showErrorBox('Skin Change Failed', 'Please select a valid skin');
+      } 
+    }
+
+    const changeSkin = (name) => {
+      let link = document.createElement('link');
+      link.onload = () => {
+        gantt.resetSkin();
+        gantt.render();
+      };
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.id = 'skin';
+      link.href = `../src/codebase/skins/dhtmlxgantt_${name}.css`;
+      document.head.replaceChild(link, document.querySelector('#skin'));
+    }
+
+    const exportTo = () => {
+      let output = document.querySelector('#export').value;
+      switch(output) {
+        case 'pdf': gantt.exportToPDF(); break;
+        case 'png': gantt.exportToPNG(); break;
+        case 'excel': gantt.exportToExcel(); break;
+        case 'ical': gantt.exportToICal(); break;
+        default: dialog.showErrorBox('Export Failed', 'Wrong file format');
+      }
+      $("export").val('');
+    }
 
     const saveGantt = () => {
       let savedGantt = gantt.serialize();
@@ -178,13 +217,13 @@
         }]
       }, (filename) => {
         if(filename === undefined) {
-          dialog.showErrorBox('File not saved');
+          dialog.showErrorBox('Save Failed', 'You didnt specify a filename');
           return;
         }
 
         fs.writeFile(filename, content, (err) => {
           if(err) {
-            dialog.showErrorBox(`An error occured creating the file ${err.message}`);
+            dialog.showErrorBox('Save Failed', `An error occured saving the file ${err.message}`);
             return;
           }
         dialog.showMessageBox({ type: "none", title: "Ganttron", message: 'The file was successfully saved', buttons: ["OK"] });
@@ -204,12 +243,12 @@
         }]
       }, (fileName) => {
           if(fileName === undefined) {
-            dialog.showErrorBox('File not loaded');
+            dialog.showErrorBox('Load Failed', 'File not loaded');
             return;
         }
         fs.readFile(fileName[0], 'utf-8', (err, data) => {
           if(err) {
-            dialog.showErrorBox(`Cannot read file ${err.message}`);
+            dialog.showErrorBox('Load Failed', `Cannot read file ${err.message}`);
           }
           let loadedData = JSON.parse(data);
           gantt.parse(loadedData);
@@ -219,6 +258,7 @@
     
   </script>
   <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../node_modules/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 </body>
 
 </html>

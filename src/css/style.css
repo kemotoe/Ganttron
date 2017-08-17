@@ -41,8 +41,17 @@ body {
   z-index: 999999 !important;
 }
 
-.taskbar-wrapper .btn-primary {
+.taskbar .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+  width: 180px;
   float: right;
+  margin-right: 20px;
+}
+
+.bootstrap-select > .dropdown-toggle.bs-placeholder,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:active,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:focus,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:hover {
+  color: #fff;
 }
 
 .taskbar {
@@ -61,6 +70,7 @@ body {
   width: 22px;
   height: 22px;
   margin-left: -11px;
+  margin-top: 5px;
   z-index: 1;
   background: url("../img/deadline_icon.png") center no-repeat;
 }
