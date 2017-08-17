@@ -1,8 +1,8 @@
 {
     "name": "ganttron",
-    "productName": "ganttron",
+    "productName": "Ganttron",
     "version": "1.0.0",
-    "description": "Desktop application for the easy creation of gantt charts",
+    "description": "Desktop application for the easy creation of Gantt project management charts",
     "main": "src/index.js",
     "scripts": {
         "start": "electron-forge start",
@@ -11,7 +11,7 @@
         "lint": "eslint src"
     },
     "keywords": [],
-    "author": "kemotoe",
+    "author": "Edward Spalding",
     "license": "MIT",
     "stylelint": {
         "extends": "stylelint-config-standard"
@@ -49,10 +49,10 @@
         }
     },
     "dependencies": {
-        "bootstrap": "^3.3.7",
-        "bootstrap-select": "^1.12.4",
+        "bootstrap": "4.0.0-beta",
         "electron-compile": "^6.4.1",
-        "jquery": "^3.2.1"
+        "jquery": "^3.2.1",
+        "popper.js": "^1.12.2"
     },
     "devDependencies": {
         "babel-plugin-transform-async-to-generator": "^6.24.1",
