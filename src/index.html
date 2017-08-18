@@ -5,18 +5,20 @@
   <meta charset="utf-8">
   <title>Ganttron</title>
   <script src="./codebase/dhtmlxgantt.js"></script>
+  <script src="./codebase/dhtmlxcalendar.js"></script>
   <script src="https://export.dhtmlx.com/gantt/api.js"></script>
   <link id="skin" href="./codebase/dhtmlxgantt.css" rel="stylesheet">
+  <link href="./codebase/dhtmlxcalendar.css" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
   <!-- TODO: refactor code to gracefully handle the gantt export API window opening and format the export methods of the API -->
   <div class="taskbar">
   <div class="dropdown">
-    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Export To...
     </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenu">
@@ -27,7 +29,7 @@
       </div>
   </div> 
   <div class="dropdown">
-    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Change Skin
     </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -35,12 +37,11 @@
         <button class="dropdown-item" type="button" onclick="changeSkin('meadow')">Meadow</button>
         <button class="dropdown-item" type="button" onclick="changeSkin('skyblue')">Skyblue</button>
         <button class="dropdown-item" type="button" onclick="changeSkin('broadway')">Broadway</button>
-        <button class="dropdown-item" type="button" onclick="changeSkin('contrast_white')">Contrast White</button>
       </div>
     </div>
-    <button class="btn btn-primary" onclick="saveGantt()">Save Gantt Chart</button>
-    <button class="btn btn-primary" onclick="loadGantt()">Load Gantt Chart</button>
-    <button class="btn btn-danger" onclick="clearGantt()">Clear Gantt Chart</button>
+    <button class="btn btn-outline-dark" onclick="loadGantt()">Load Gantt Chart</button>
+    <button class="btn btn-outline-dark" onclick="saveGantt()">Save Gantt Chart</button>
+    <button class="btn btn-outline-danger" onclick="clearGantt()">Clear Gantt Chart</button>
   </div>
   <div id="gantt">
   </div>
@@ -113,7 +114,7 @@
 		  if (task.deadline) {
 			  if (end.valueOf() > task.deadline.valueOf()) {
 				  let overdue = Math.ceil(Math.abs((end.getTime() - task.deadline.getTime()) / (24 * 60 * 60 * 1000)));
-				  let text = "<b>Overdue: " + overdue + " day(s)</b>";
+				  let text = `<b>Overdue: ${overdue} day(s)</b>`;
 				  return text;
 			  }
 		  }
@@ -126,15 +127,60 @@
 		  return true;
 	  });
 
-    // cusotm labels for the deadline field and set/remove button in the lightbox
+    // custom labels for the deadline field and set/remove button in the lightbox
     gantt.locale.labels.deadline_enable_button = 'Set';
 	  gantt.locale.labels.deadline_disable_button = 'Remove';
     gantt.locale.labels.section_deadline = "Deadline";
   
+    // caculating the task duration for the lightbox
+    let duration = (begin, end, total) => {
+      let result = gantt.calculateDuration(begin.getDate(false), end.getDate(false));
+      total.innerHTML = `${result} days`;
+    }
+
+    // initializing the calendar component for time selection
+    let calendarInit = (id, data, date) => {
+      let object = new dhtmlXCalendarObject(id);
+      object.setDateFormat(data.date_format ? data.date_format : "");
+      object.setDate(date ? date : (new Date()));
+      object.hideTime();
+      if (data.skin) {
+        object.setSkin(data.skin);
+      }
+      return object;
+    }
+
+    // creating the custom calendar element
+    gantt.form_blocks['dhx_calendar'] = {
+      render: (sns) => {
+          return `<div class='dhx_calendar_cont'><input type='text' readonly='true' id='calendar1'/> &#8211;
+                  <input type='text' readonly='true' id='calendar2'/><label id='duration'></label></div>;`
+      },
+      set_value: (node, value, task, data) => {
+        let a = node.calStart = calendarInit('calendar1', data, task.start_date);
+        let b = node.calEnd = calendarInit('calendar2', data, task.end_date);
+        let c = node.lastChild;
+
+        b.setInsensitiveRange(null, new Date(a.getDate(false) - 86400000));
+
+        let a_click = a.attachEvent("onclick", (date) => {
+          b.setInsensitiveRange(null, new Date(date.getTime() - 86400000));
+          duration(a, b, c);
+        });
+
+        let b_click = end.attachEvent("onclick", (date) => {
+          duration(a, b, c);
+        });
+
+        
+      }
+    }
+    
+
     // configuring the lightbox fields
     gantt.config.lightbox.sections = [
       { name: "description", height: 70, map_to: "text", type: "textarea", focus: true },
-      { name: "time", map_to: "auto", type: "duration" },
+      { name: "time", map_to: "auto", type: "dhx_calendar", skin: '', date_format: '%d %M %Y'},
       { name: "deadline", map_to: { start_date: "deadline" }, type: "duration_optional", button: true, single_date: true }
     ];
 
@@ -168,7 +214,7 @@
     // initialize the configured gantt chart
     gantt.init("gantt");
 
-    // evetn handlers for when a user clicks on one of the buttons in the grid
+    // event handlers for when a user clicks on one of the buttons in the grid
     const clickGridButton = (id, action) => {
       switch (action) {
         case "edit":
@@ -192,10 +238,19 @@
 
     // function that clears all tasks from current gantt
     const clearGantt = () => {
-      gantt.clearAll();
+      dialog.showMessageBox({
+        type: "warning",
+        title: "Ganttron",
+        message: "This will clear the gantt chart and erase all data",
+        buttons: ["Cancel", "OK"] 
+      }, response => {
+          if(response === 1) {
+             gantt.clearAll();
+          }
+      }); 
     }
 
-    // fucntion that takes a name parameter from onclick and loads the correct stylesheet and replaces it
+    // function that takes a name parameter from onclick and loads the correct stylesheet and replaces it
     const changeSkin = (name) => {
       let link = document.createElement('link');
       link.onload = () => {
@@ -210,8 +265,8 @@
       document.head.replaceChild(link, document.querySelector('#skin'));
     }
 
-    // function for saving a gantt project projects are serialized into a json file
-    // the JSON is then strngified for human readiblity then thru the dialog api is saved to
+    // function for saving a gantt project projects are serialized into a JSON file
+    // the JSON is then stringified for human readiblity then thru the dialog api is saved to
     // users computer
     const saveGantt = () => {
       let savedGantt = gantt.serialize();
@@ -222,48 +277,52 @@
           name: 'json',
           extensions: ['json']
         }]
-      }, (filename) => {
-        if(filename === undefined) {
-          dialog.showErrorBox('Save Failed', 'You didnt specify a filename');
-          return;
-        }
-
-        fs.writeFile(filename, content, (err) => {
-          if(err) {
-            dialog.showErrorBox('Save Failed', `An error occured saving the file ${err.message}`);
-            return;
+      },(filename) => {
+          if(filename === undefined) {
+            return
           }
-        dialog.showMessageBox({ type: "none", title: "Ganttron", message: 'The file was successfully saved', buttons: ["OK"] });
+          fs.writeFile(filename, content, (err) => {
+            if(err) {
+              dialog.showErrorBox('Save Failed', `An error occured saving the file ${err.message}`);
+              return;
+            }
+          dialog.showMessageBox({ type: "none", title: "Ganttron", message: 'The file was successfully saved', buttons: ["OK"] });
         });
       });
     }
 
-    // function that loads a gantt project uses the dioalog api to open a JSON file from
+    // function that loads a gantt project uses the dialog api to open a JSON file from
     // the users computer then it is parsed to return a JSON object that is then parsed by
     // the gantt api
     const loadGantt = () => {
-      if(gantt) {
-        gantt.clearAll();
-      }
-      dialog.showOpenDialog({
-        defaultPath: `C:\\Users\\${process.env.USERNAME}\\Documents`,
-        filters: [{
-          name: 'json',
-          extensions: ['json']
-        }]
-      }, (fileName) => {
-          if(fileName === undefined) {
-            dialog.showErrorBox('Load Failed', 'You didnt specify a filename');
-            return;
-        }
-        fs.readFile(fileName[0], 'utf-8', (err, data) => {
-          if(err) {
-            dialog.showErrorBox('Load Failed', `Cannot read file ${err.message}`);
+      dialog.showMessageBox({
+        type: "warning",
+        title: "Ganttron",
+        message: "This will clear the gantt chart and load new data",
+        buttons: ["Cancel", "OK"]
+      },(response) => {
+          if (response === 1) {
+            gantt.clearAll();
+            dialog.showOpenDialog({
+              defaultPath: `C:\\Users\\${process.env.USERNAME}\\Documents`,
+              filters: [{
+                name: 'json',
+                extensions: ['json']
+              }]
+            }, fileName => {
+                if(fileName === undefined) {
+                  return;
+                }
+              fs.readFile(fileName[0], 'utf-8', (err, data) => {
+                if (err) {
+                  dialog.showErrorBox('Load Failed', `Cannot read file ${err.message}`);
+                }
+                let loadedData = JSON.parse(data);
+                gantt.parse(loadedData);
+              });
+            })
           }
-          let loadedData = JSON.parse(data);
-          gantt.parse(loadedData);
-        });
-      });
+      })
     }
     
   </script>
