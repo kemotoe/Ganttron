@@ -61,12 +61,16 @@ body {
 .dhx_calendar_cont input {
   width: 96px;
   padding: 0;
-  margin: 3px 10px 10px 10px;
+  margin: 3px 10px 10px;
   font-size: 11px;
-  height: 17px;
+  height: 24px;
   text-align: center;
   border: 1px solid #ccc;
   color: #646464;
+}
+
+.dhtmlxcalendar_material {
+  z-index: 999999 !important;
 }
 
 .overdue-indicator {
@@ -76,7 +80,20 @@ body {
   box-sizing: border-box;
   border-radius: 17px;
   color: white;
-  background: rgb(255, 60, 60);
+  background: #ff3c3c;
+  line-height: 20px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.not-overdue {
+  width: 20px;
+  margin-top: 5px;
+  height: 20px;
+  box-sizing: border-box;
+  border-radius: 17px;
+  color: white;
+  background: #0c0;
   line-height: 20px;
   text-align: center;
   font-size: 18px;
