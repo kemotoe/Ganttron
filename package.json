@@ -51,6 +51,7 @@
     "dependencies": {
         "bootstrap": "4.0.0-beta",
         "electron-compile": "^6.4.1",
+        "electron-context-menu": "^0.9.1",
         "jquery": "^3.2.1",
         "popper.js": "^1.12.2"
     },

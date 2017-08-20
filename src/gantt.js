@@ -1,12 +1,17 @@
 // requiring fs (filesystem) from node and remote from electron
-const fs = require('fs');
-const { dialog } = require('electron').remote;
+import fs from 'fs';
+import path from 'path';
+import electron from 'electron';
+
+const { dialog } = electron.remote;
+
 
 // creating a template for the 'buttons' section of the grid
 const colHeader = '<div class="gantt_grid_head_cell gantt_grid_head_add" onclick="gantt.createTask()"></div>',
   colContent = task => `<i class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="clickGridButton(${task.id}, 'edit')"></i>
-            <i class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="clickGridButton(${task.id}, 'add')"></i>
-            <i class="fa gantt_button_grid gantt_grid_delete fa-times" onclick="clickGridButton(${task.id}, 'delete')"></i>`;
+                        <i class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="clickGridButton(${task.id}, 'add')"></i>
+                        <i class="fa gantt_button_grid gantt_grid_delete fa-times" onclick="clickGridButton(${task.id}, 'delete')"></i>`;
+
 
 // configuring the columns within the grid
 // | overdue icon | Task Name | Start Time | Deadline | Duration | Buttons (edit, add, delete)
@@ -250,10 +255,11 @@ const clickGridButton = (id, action) => {
 const clearGantt = () => {
   dialog.showMessageBox(
     {
-      type: 'warning',
+      type: 'none',
       title: 'Ganttron',
       message: 'This will clear the gantt chart and erase all data',
       buttons: ['Cancel', 'OK'],
+      icon: path.join(__dirname, 'img/gantt.png.ico'),
     },
     (response) => {
       if (response === 1) {
@@ -324,7 +330,7 @@ const saveGantt = () => {
 const loadGantt = () => {
   dialog.showMessageBox(
     {
-      type: 'warning',
+      type: 'none',
       title: 'Ganttron',
       message: 'This will clear the gantt chart and load new data',
       buttons: ['Cancel', 'OK'],
