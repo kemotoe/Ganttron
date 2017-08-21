@@ -65,8 +65,13 @@ body {
   font-size: 11px;
   height: 24px;
   text-align: center;
+  text-indent: 17px;
   border: 1px solid #ccc;
   color: #646464;
+  background-image: url('../img/calendar.png');
+  background-repeat: no-repeat;
+  background-position: 2px 3px;
+  cursor: pointer;
 }
 
 .dhtmlxcalendar_material {

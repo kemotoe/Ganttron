@@ -1,10 +1,8 @@
-// requiring fs (filesystem) from node and remote from electron
 import fs from 'fs';
 import path from 'path';
 import electron from 'electron';
 
 const { dialog } = electron.remote;
-
 
 // creating a template for the 'buttons' section of the grid
 const colHeader = '<div class="gantt_grid_head_cell gantt_grid_head_add" onclick="gantt.createTask()"></div>',
@@ -14,7 +12,6 @@ const colHeader = '<div class="gantt_grid_head_cell gantt_grid_head_add" onclick
 
 
 // configuring the columns within the grid
-// | overdue icon | Task Name | Start Time | Deadline | Duration | Buttons (edit, add, delete)
 gantt.config.columns = [
   {
     name: 'overdue',
@@ -229,7 +226,7 @@ gantt.ignore_time = (date) => {
 // initialize the configured gantt chart
 gantt.init('gantt');
 
-// event handlers for when a user clicks on one of the buttons in the grid
+// handlers for when a user clicks on one of the buttons in the grid
 const clickGridButton = (id, action) => {
   switch (action) {
     case 'edit':
