@@ -111,6 +111,7 @@ const duration = (begin, end, total) => {
 // initializing the calendar component for time selection
 const calendarInit = (id, data, date) => {
   const object = new dhtmlXCalendarObject(id);
+  object.disableDays('week', [6, 7]);
   object.setDateFormat(data.date_format ? data.date_format : '');
   object.setDate(date || new Date());
   object.hideTime();
@@ -177,27 +178,9 @@ gantt.form_blocks.dhx_calendar2 = {
 
 // configuring the lightbox fields
 gantt.config.lightbox.sections = [
-  {
-    name: 'description',
-    height: 70,
-    map_to: 'text',
-    type: 'textarea',
-    focus: true,
-  },
-  {
-    name: 'time',
-    map_to: 'auto',
-    type: 'dhx_calendar',
-    skin: '',
-    date_format: '%d %M %Y',
-  },
-  {
-    name: 'deadline',
-    map_to: { start_date: 'deadline' },
-    type: 'duration_optional',
-    button: true,
-    single_date: true,
-  },
+  { name: 'description', height: 70, map_to: 'text', type: 'textarea', focus: true },
+  { name: 'time', map_to: 'auto', type: 'dhx_calendar', skin: '', date_format: '%d %M %Y' },
+  { name: 'deadline', map_to: { start_date: 'deadline' }, type: 'duration_optional', button: true, single_date: true },
 ];
 
 // configuring the time scale for the gantt chart may refactor in the future
@@ -217,14 +200,19 @@ gantt.config.fit_tasks = true;
 gantt.config.order_branch = true;
 gantt.config.order_branch_free = true;
 
-// Ignoring weekends non functional without pro TODO: will have to roll my own
+// removes non-working time from calculation and hides non working time in the chart
+gantt.config.work_time = true;
+gantt.config.skip_off_time = true;
+
+
+// initialize the configured gantt chart
+gantt.init('gantt');
+
+// Ignoring weekends from time scale
 gantt.ignore_time = (date) => {
   if (date.getDay() === 0 || date.getDay() === 6) return true;
   return false;
 };
-
-// initialize the configured gantt chart
-gantt.init('gantt');
 
 // handlers for when a user clicks on one of the buttons in the grid
 const clickGridButton = (id, action) => {
@@ -247,6 +235,82 @@ const clickGridButton = (id, action) => {
     default:
   }
 };
+
+//
+const applyConfig = (config, dates) => {
+  gantt.config.scale_unit = config.scale_unit;
+  if (config.date_scale) {
+    gantt.config.date_scale = config.date_scale;
+    gantt.templates.date_scale = null;
+  } else {
+    gantt.templates.date_scale = config.template;
+  }
+
+  gantt.config.step = config.step;
+  gannt.config.subscales = config.subscales;
+
+  if (dates) {
+    gantt.config.start_date = gantt.date.add(dates.start, -1, config.unit);
+    gantt.config.end_date = gantt.date.add(gannt.date[`${config.unit} _start`](dates.end_date), 2, config.unit);
+  } else {
+    gantt.config.start_date = gannt.config.end_date = null;
+  }
+};
+
+//
+let cachedSettings;
+const restoreConfig = () => {
+  applyConfig(cachedSettings);
+};
+
+//
+const getUnitsBetween = (from, to, unit, step) => {
+  let start = new Date(from);
+  const end = new Date(to);
+  let units = 0;
+  while (start.valueOf() < end.valueOf) {
+    units++;
+    start = gantt.date.add(start, step, unit);
+  }
+  return units;
+};
+
+//
+let scaleConfigs = [
+  
+];
+
+//
+const zoomToFit = () => {
+  const project = gantt.getSubtaskDates();
+  areaWidth = gantt.$task.offsetWidth;
+  for (let i = 0; i < scaleConfigs.length; i++) {
+    const columnCount = getUnitsBetween(project.start_date, project.end_date, scaleConfigs[i].unit, scaleConfigs[i].step);
+    if ((columnCount + 2) * gantt.config.min_column_width <= areaWidth) {
+      break;
+    }
+  }
+  if (i === scaleConfigs.length) {
+    i--;
+  }
+  applyConfig(scaleConfigs[i], pr0ject);
+  gantt.render();
+};
+
+//
+const toggleZoom = (toggle) => {
+  toggle.enabled = !toggle.enabled;
+  if (toggle.enabled) {
+    toggle.innerHTML = 'Set default scale';
+    saveConfig();
+    zoomToFit();
+  } else {
+    toggle.innerHTML = 'Zoom to Fit';
+    restoreConfig();
+    gantt.render();
+  }
+};
+
 
 // function that clears all tasks from current gantt
 const clearGantt = () => {
