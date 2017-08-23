@@ -13,6 +13,8 @@ const createWindow = () => {
   // Create the browser window set show to false and load our icon
   mainWindow = new BrowserWindow({
     show: false,
+    minWidth: 1366,
+    minHeight: 768,
     icon: `${__dirname}/img/gantt.png.ico`,
   });
 

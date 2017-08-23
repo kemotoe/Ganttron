@@ -72,11 +72,7 @@ gantt.templates.task_class = (start, end, task) => {
 gantt.templates.rightside_text = (start, end, task) => {
   if (task.deadline) {
     if (end.valueOf() > task.deadline.valueOf()) {
-      const overdue = Math.ceil(
-        Math.abs(
-          (end.getTime() - task.deadline.getTime()) / (24 * 60 * 60 * 1000),
-        ),
-      );
+      const overdue = Math.ceil(Math.abs((end.getTime() - task.deadline.getTime()) / (24 * 60 * 60 * 1000)));
       const text = `<b>Overdue: ${overdue} day(s)</b>`;
       return text;
     }
