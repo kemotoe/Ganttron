@@ -13,6 +13,70 @@ body {
   cursor: pointer;
 }
 
+.taskbar .dark-outline,
+.taskbar .red-outline {
+  display: inline-block;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  border-radius: 1.5rem;
+  border-style: solid;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; 
+}
+
+.dark-outline {
+  color: #343a40;
+  background-color: transparent;
+  background-image: none;
+  border-color: #343a40;
+}
+
+.dark-outline:hover {
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
+}
+
+.dark-outline:active {
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
+}
+
+.dark-outline:focus {
+  box-shadow: 0 0 0 3px rgba(52, 58, 64, 0.5);
+  outline: 0;
+}
+
+.red-outline {
+  color: #dc3545;
+  background-color: transparent;
+  background-image: none;
+  border-color: #dc3545;
+}
+
+.red-outline:hover {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.red-outline:focus {
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.5);
+  outline: 0;
+}
+
+.red-outline:active {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;  
+}
+
 #gantt {
   width: 100%;
   height: 92%;
@@ -31,8 +95,8 @@ body {
 }
 
 .gantt_btn_set.gantt_delete_btn_set {
-  background: #d9534f;
-  opacity: 0.9;
+  background: #dc3545;
+  opacity: 0.8;
 }
 
 .gantt_btn_set.gantt_delete_btn_set:hover {
