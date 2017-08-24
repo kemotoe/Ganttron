@@ -3,10 +3,11 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Ganttron</title>
+  <title></title>
   <script src="./codebase/dhtmlxgantt.js"></script>
   <script src="./codebase/dhtmlxcalendar.js"></script>
   <script src="https://export.dhtmlx.com/gantt/api.js"></script>
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="./codebase/dhtmlxgantt.css" rel="stylesheet" id="skin">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link href="./codebase/dhtmlxcalendar.css" rel="stylesheet">
@@ -15,13 +16,42 @@
 
 <body>
   <div class="taskbar">
-    <button class="dark-outline" onclick="loadGantt()">Load Gantt Chart</button>
-    <button class="dark-outline" onclick="saveGantt()">Save Gantt Chart</button>
-    <button class="red-outline" onclick="clearGantt()">Clear Gantt Chart</button>
+    <div class="dropdown">
+      <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
+      Export To...
+    </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+        <button class="dropdown-item" type="button" onclick="gantt.exportToPDF()">PDF</button>
+        <button class="dropdown-item" type="button" onclick="gantt.exportToPNG()">PNG</button>
+        <button class="dropdown-item" type="button" onclick="gantt.exportToExcel()">Excel</button>
+        <button class="dropdown-item" type="button" onclick="gantt.exportToICal()">iCal</button>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
+      Change Skin
+    </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        <button class="dropdown-item" type="button" onclick="changeSkin('terrace')">Terrace (default)</button>
+        <button class="dropdown-item" type="button" onclick="changeSkin('meadow')">Meadow</button>
+        <button class="dropdown-item" type="button" onclick="changeSkin('skyblue')">Skyblue</button>
+        <button class="dropdown-item" type="button" onclick="changeSkin('broadway')">Broadway</button>
+      </div>
+    </div>
+    <button class="btn btn-outline-dark" onclick="loadGantt()">Load Gantt Chart</button>
+    <button class="btn btn-outline-dark" onclick="saveGantt()">Save Gantt Chart</button>
+    <button class="btn btn-outline-danger" onclick="clearGantt()">Clear Gantt Chart</button>
   </div>
-  <div id="gantt">
   </div>
+  <div id="gantt"></div>
+  <script>
+    window.$ = window.jQuery = require('../node_modules/jquery/dist/jquery.min');
+  </script>
   <script src="./gantt.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>

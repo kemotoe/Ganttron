@@ -5,81 +5,49 @@ body {
   height: 100%;
 }
 
-.taskbar button {
-  margin: 20px;
+label {
+  display: inline;
 }
 
-.taskbar button:hover {
+.taskbar {
+  height: 8vh;
+}
+
+.taskbar .btn {
+  margin-top: 12px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 40px;
+}
+
+.taskbar .btn:hover {
   cursor: pointer;
 }
 
-.taskbar .dark-outline,
-.taskbar .red-outline {
-  display: inline-block;
-  font-weight: normal;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  user-select: none;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.25;
-  border-radius: 1.5rem;
-  border-style: solid;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; 
+.taskbar .dropdown .btn-outline-dark {
+  float: right;
 }
 
-.dark-outline {
-  color: #343a40;
-  background-color: transparent;
-  background-image: none;
-  border-color: #343a40;
+.dropdown-menu {
+  margin-top: 0.313rem;
+  padding: 0;
 }
 
-.dark-outline:hover {
-  color: #fff;
-  background-color: #343a40;
-  border-color: #343a40;
+.dropdown-menu.show {
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
 }
 
-.dark-outline:active {
-  color: #fff;
-  background-color: #343a40;
-  border-color: #343a40;
+.dropdown-item {
+  cursor: pointer;
 }
 
-.dark-outline:focus {
-  box-shadow: 0 0 0 3px rgba(52, 58, 64, 0.5);
-  outline: 0;
-}
-
-.red-outline {
-  color: #dc3545;
-  background-color: transparent;
-  background-image: none;
-  border-color: #dc3545;
-}
-
-.red-outline:hover {
-  color: #fff;
-  background-color: #dc3545;
-  border-color: #dc3545;
-}
-
-.red-outline:focus {
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.5);
-  outline: 0;
-}
-
-.red-outline:active {
-  color: #fff;
-  background-color: #dc3545;
-  border-color: #dc3545;  
+.dropdown-item:hover {
+  background-color: #c6c7c8;
 }
 
 #gantt {
   width: 100%;
-  height: 92%;
+  height: 92vh;
 }
 
 .gantt_cell {
@@ -94,12 +62,31 @@ body {
   font-weight: bold;
 }
 
+.gantt_btn_set.gantt_save_btn_set {
+  opacity: 0.8;
+}
+
+.gantt_btn_set.gantt_save_btn_set:hover {
+  opacity: 1;
+}
+
 .gantt_btn_set.gantt_delete_btn_set {
   background: #dc3545;
   opacity: 0.8;
 }
 
 .gantt_btn_set.gantt_delete_btn_set:hover {
+  opacity: 1;
+}
+
+.gantt_custom_button {
+  width: 80px;
+  background: #3db9d3;
+  color: #fff;
+  opacity: 0.8;
+}
+
+.gantt_custom_button:hover {
   opacity: 1;
 }
 

@@ -298,7 +298,7 @@ const saveGantt = () => {
         dialog.showMessageBox({
           type: 'none',
           title: 'Ganttron',
-          message: 'The file was successfully saved',
+          message: 'The chart was successfully saved',
           buttons: ['OK'],
         });
       });

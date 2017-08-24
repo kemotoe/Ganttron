@@ -15,6 +15,7 @@ const createWindow = () => {
     show: false,
     minWidth: 1366,
     minHeight: 768,
+    title: 'Ganttron',
     icon: `${__dirname}/img/gantt.png.ico`,
   });
 
@@ -22,8 +23,9 @@ const createWindow = () => {
   mainWindow.maximize();
   mainWindow.loadURL(`file://${__dirname}/index.html`);
   // Wait for window to load before we show
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.on('ready-to-show', () => {
     mainWindow.show();
+    mainWindow.focus();
   });
 
 
