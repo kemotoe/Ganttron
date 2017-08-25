@@ -4,6 +4,8 @@ import electron from 'electron';
 
 const { dialog } = electron.remote;
 
+let quickSaveFileName;
+
 // creating a template for the 'buttons' section of the grid
 const colHeader = '<div class="gantt_grid_head_cell gantt_grid_head_add" onclick="gantt.createTask()"></div>',
   colContent = task => `<i class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="clickGridButton(${task.id}, 'edit')"></i>
@@ -267,12 +269,65 @@ const changeSkin = (name) => {
   document.head.replaceChild(link, document.querySelector('#skin'));
 };
 
+// dirty quicksave
+const quickSave = () => {
+  let saveData = gantt.serialize();
+  saveData = JSON.stringify(saveData, null, '\t');
+  if (quickSaveFileName === undefined) {
+    dialog.showSaveDialog(
+      {
+        defaultPath: `C:\\Users\\${process.env.USERNAME}\\Documents\\`,
+        filters: [
+          {
+            name: 'json',
+            extensions: ['json'],
+          },
+        ],
+      },
+      (filename) => {
+        if (filename === undefined) {
+          return;
+        }
+        fs.writeFile(filename, content, (error) => {
+          if (error) {
+            dialog.showErrorBox(
+              'Save Failed',
+              `An error occured saving the file ${error.message}`,
+            );
+            return;
+          }
+          dialog.showMessageBox({
+            type: 'none',
+            title: 'Ganttron',
+            message: 'The chart was successfully saved',
+            buttons: ['OK'],
+          });
+        });
+      });
+  } else {
+    fs.writeFile(quickSaveFileName, saveData, (error) => {
+      if (error) {
+        dialog.showErrorBox(
+          'Save Failed',
+          `An error occured saving the file ${error.message}`,
+        );
+      }
+      dialog.showMessageBox({
+        type: 'none',
+        title: 'Ganttron',
+        message: 'The chart was successfully saved',
+        buttons: ['OK'],
+      });
+    });
+  }
+};
+
 // function for saving a gantt project projects are serialized into a JSON file
 // the JSON is then stringified for human readiblity then thru the dialog api is saved to
 // users computer
 const saveGantt = () => {
-  const savedGantt = gantt.serialize();
-  const content = JSON.stringify(savedGantt, null, '\t');
+  let content = gantt.serialize();
+  content = JSON.stringify(content, null, '\t');
   dialog.showSaveDialog(
     {
       defaultPath: `C:\\Users\\${process.env.USERNAME}\\Documents\\`,
@@ -335,6 +390,7 @@ const loadGantt = () => {
               return;
             }
             fs.readFile(fileName[0], 'utf-8', (err, data) => {
+              quickSaveFileName = fileName[0].toString();
               if (err) {
                 dialog.showErrorBox(
                   'Load Failed',
