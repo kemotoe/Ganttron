@@ -8173,7 +8173,7 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
     day_short: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
   },
   labels: {
-    new_task: "New task",
+    //new_task: "New task",
     icon_save: "Save",
     icon_cancel: "Cancel",
     icon_details: "Details",

@@ -90,6 +90,12 @@ label {
   opacity: 1;
 }
 
+.gantt_cal_ltext textarea:focus {
+  outline: none;
+  border: 1px solid #3db9d3;
+  box-shadow: 0 0 2px #3db9d3;
+}
+
 .deadline {
   position: absolute;
   border-radius: 12px;
@@ -117,6 +123,12 @@ label {
   background-repeat: no-repeat;
   background-position: 2px 3px;
   cursor: pointer;
+}
+
+.dhx_calendar_cont input:focus {
+  outline: none;
+  border: 1px solid #3db9d3;
+  box-shadow: 0 0 2px #3db9d3; 
 }
 
 .dhtmlxcalendar_material {

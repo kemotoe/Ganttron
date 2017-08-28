@@ -89,10 +89,24 @@ gantt.attachEvent('onTaskLoading', (task) => {
   return true;
 });
 
-// custom labels for the deadline field and set/remove button in the lightbox
+//
+gantt.attachEvent('onLightBoxSave', (id, task) => {
+  if (!task.text) {
+    gantt.message({ type: 'error', text: 'Please enter a task description' });
+    return false;
+  }
+  if (!task.assigned) {
+    gantt.message({ type: 'error', text: 'Task must be assigned' });
+    return false;
+  }
+  return true;
+});
+
+// custom labels for the lightbox fields
 gantt.locale.labels.deadline_enable_button = 'Set';
 gantt.locale.labels.deadline_disable_button = 'Remove';
 gantt.locale.labels.section_deadline = 'Deadline';
+gantt.locale.labels.section_assigned = 'Assigned To';
 
 // caculating the task duration for the lightbox
 const duration = (begin, end, total) => {
@@ -120,7 +134,6 @@ const calendarInit = (id, data, date) => {
 };
 
 // creating the custom calendar element
-// TODO: put icon in text field
 gantt.form_blocks.dhx_calendar = {
   render: () => `<div class='dhx_calendar_cont'><input type='text' readonly='true' id='calendar1'/> &#8211
                   <input type='text' readonly='true' id='calendar2'/><label id='duration'></label></div>`,
@@ -176,7 +189,8 @@ gantt.form_blocks.dhx_calendar2 = {
 
 // configuring the lightbox fields
 gantt.config.lightbox.sections = [
-  { name: 'description', height: 70, map_to: 'text', type: 'textarea', focus: true },
+  { name: 'description', height: 50, map_to: 'text', type: 'textarea', focus: true },
+  { name: 'assigned', height: 35, map_to: 'assigned', type: 'textarea' },
   { name: 'time', map_to: 'auto', type: 'dhx_calendar', skin: '', date_format: '%d %M %Y' },
   { name: 'deadline', map_to: { start_date: 'deadline' }, type: 'duration_optional', button: true, single_date: true },
 ];
@@ -196,7 +210,6 @@ gantt.config.fit_tasks = true;
 
 // configuration that allows tasks in the grid to be DnD and reconfigurable
 gantt.config.order_branch = true;
-gantt.config.order_branch_free = true;
 
 // removes non-working time from calculation and hides non working time in the chart
 gantt.config.work_time = true;
@@ -248,6 +261,7 @@ const clearGantt = () => {
     (response) => {
       if (response === 1) {
         gantt.clearAll();
+        quickSaveFileName = null;
       }
     },
   );
@@ -273,7 +287,7 @@ const changeSkin = (name) => {
 const quickSave = () => {
   let saveData = gantt.serialize();
   saveData = JSON.stringify(saveData, null, '\t');
-  if (quickSaveFileName === undefined) {
+  if (quickSaveFileName === undefined || quickSaveFileName === null) {
     dialog.showSaveDialog(
       {
         defaultPath: `C:\\Users\\${process.env.USERNAME}\\Documents\\`,
