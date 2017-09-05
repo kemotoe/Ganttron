@@ -96,6 +96,15 @@ label {
   box-shadow: 0 0 2px #3db9d3;
 }
 
+.gantt_qi_big_icon.icon_delete {
+  background-color: #dc3545;
+  opacity: 0.8;
+}
+
+.gantt_qi_big_icon.icon_delete:hover {
+  opacity: 1;
+}
+
 .deadline {
   position: absolute;
   border-radius: 12px;

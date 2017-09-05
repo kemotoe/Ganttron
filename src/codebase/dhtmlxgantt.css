@@ -1314,7 +1314,7 @@ div.dhx_modal_cover {
   top: 0;
   position: absolute;
   text-align: center;
-  background-color: rgba(255, 0, 0, .4);
+  background-color: rgba(0, 128, 0, 0.4);
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;

@@ -60,7 +60,7 @@ gantt.addTaskLayer((task) => {
 
 // displaying progress % on left side of task
 gantt.templates.progress_text = (start, end, task) => (
-    `<span style='text-align:left;'>${Math.round(task.progress * 100)}% </span>`
+    `<span style='text-align:left;'>${Math.trunc(task.progress * 100)}% </span>`
   );
 
 // logic for determing if a task is overdue
