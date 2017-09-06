@@ -12,7 +12,6 @@ const colHeader = '<div class="gantt_grid_head_cell gantt_grid_head_add" onclick
                         <i class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="clickGridButton(${task.id}, 'add')"></i>
                         <i class="fa gantt_button_grid gantt_grid_delete fa-times" onclick="clickGridButton(${task.id}, 'delete')"></i>`;
 
-
 // configuring the columns within the grid
 gantt.config.columns = [
   {
@@ -33,11 +32,45 @@ gantt.config.columns = [
     },
   },
   { name: 'text', label: 'Task Name', width: '*', tree: true, resize: true },
-  { name: 'start_date', label: 'Start Time', align: 'center', width: '80' },
+  { name: 'start_date', label: 'Start Time', template: obj => gantt.templates.date_grid(obj.start_date), align: 'center', width: '80' },
   { name: 'deadline', label: 'Deadline', align: 'center', width: '80', template: (obj) => { if (!obj.deadline) { return 'None'; } return obj.deadline; } },
   { name: 'duration', label: 'Duration', align: 'center', width: '60' },
   { name: 'buttons', label: colHeader, width: 75, template: colContent },
 ];
+
+// configuring task names to appear outside of task if task name is too long
+(() => {
+  const getTaskFitValue = (task) => {
+    const taskStartPos = gantt.posFromDate(task.start_date),
+      taskEndPos = gantt.posFromDate(task.end_date);
+
+    const width = taskEndPos - taskStartPos;
+    const textWidth = (task.text || '').length * gantt.config.font_width_ratio;
+
+    if (width < textWidth) {
+      const ganttLastDate = gantt.getState().max_date;
+      const ganttEndPos = gantt.posFromDate(ganttLastDate);
+      if (ganttEndPos - taskEndPos < textWidth) {
+        return 'left';
+      }
+      return 'left';
+    }
+    return 'center';
+  };
+  gantt.config.font_width_ratio = 7;
+  gantt.templates.leftside_text = function leftSideTextTemplate(start, end, task) {
+    if (getTaskFitValue(task) === 'left') {
+      return task.text;
+    }
+    return '';
+  };
+  gantt.templates.task_text = function taskTextTemplate(start, end, task) {
+    if (getTaskFitValue(task) === 'center') {
+      return task.text;
+    }
+    return '';
+  };
+})();
 
 // custom grid width
 gantt.config.grid_width = 500;
@@ -89,7 +122,13 @@ gantt.attachEvent('onTaskLoading', (task) => {
   return true;
 });
 
-//
+// preventing the default behavior on task double click i.e. lightbox appears
+gantt.attachEvent('onTaskDblClick', (task, e) => {
+  e.preventDefault();
+});
+
+
+// validating that the task has both a name and has been assigned
 gantt.attachEvent('onLightBoxSave', (id, task) => {
   if (!task.text) {
     gantt.message({ type: 'error', text: 'Please enter a task description' });

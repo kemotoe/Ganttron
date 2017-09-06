@@ -1252,10 +1252,11 @@ div.dhx_modal_cover {
 }
 .gantt_cal_qi_tdate {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
 }
 .gantt_cal_qi_tcontent {
-  font-size: 13px;
+  font-size: 16px;
+  font-weight: 600;
 }
 .gantt_cal_qi_content {
   padding: 16px 8px;
@@ -1300,6 +1301,7 @@ div.dhx_modal_cover {
 .gantt_cal_qi_controls div {
   float: left;
   height: 32px;
+  min-width: 25px;
   text-align: center;
   line-height: 32px;
 }

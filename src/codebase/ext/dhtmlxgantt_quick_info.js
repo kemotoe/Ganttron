@@ -6,7 +6,7 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
 
 (c) Dinamenta, UAB.
 */
-(gantt.config.quickinfo_buttons = ["icon_delete", "icon_edit"]),
+(gantt.config.quickinfo_buttons = ["icon_edit", "icon_delete"]),
   (gantt.config.quick_info_detached = !0),
   (gantt.config.show_quick_info = !0),
   gantt.attachEvent("onTaskClick", function(t) {
@@ -37,8 +37,10 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
     return n.text.substr(0, 50);
   }),
   (gantt.templates.quick_info_content = function (t, e, n) {
-    const deadline = n.deadline.toString().slice(0, 15);
-    return `Assigned to: ${n.assigned}<br>Deadline: ${deadline}<br>Progress: ${n.progress !== undefined ? `${Math.trunc(n.progress * 100)}%` : 'No progress'}`;
+    return `Assigned to: ${n.assigned}<br>
+    Deadline: ${n.deadline !== null ? n.deadline.toString().slice(0, 15) : 'No Deadline'}<br>
+    Progress: ${n.progress !== undefined ? `${Math.trunc(n.progress * 100)}%` : 'No progress'}<br>
+    ${n.parent !== 0 ? `Parent Task: ${gantt.getTask(n.parent).text}` : ''}`;
   }),
   (gantt.templates.quick_info_date = function (t, e, n) {
     return gantt.templates.task_time(t, e, n);

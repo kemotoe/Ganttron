@@ -105,6 +105,14 @@ label {
   opacity: 1;
 }
 
+.gantt_qi_big_icon.icon_edit {
+  opacity: 0.8;
+}
+
+.gantt_qi_big_icon.icon_edit:hover {
+  opacity: 1;
+}
+
 .deadline {
   position: absolute;
   border-radius: 12px;
