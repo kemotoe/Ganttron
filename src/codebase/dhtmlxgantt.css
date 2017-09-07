@@ -1252,11 +1252,11 @@ div.dhx_modal_cover {
 }
 .gantt_cal_qi_tdate {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: bold;
 }
 .gantt_cal_qi_tcontent {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: bold;
 }
 .gantt_cal_qi_content {
   padding: 16px 8px;

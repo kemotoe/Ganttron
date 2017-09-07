@@ -13,7 +13,8 @@
     "consistent-return": 0,
     "no-multi-assign": 0,
     "max-len": 0,
-    "no-plusplus": 0
+    "no-plusplus": 0,
+    "no-underscore-dangle": 0
   },
   "globals": {
     "document": true,

@@ -114,6 +114,13 @@ gantt.templates.rightside_text = (start, end, task) => {
   }
 };
 
+// template for specifying the message
+gantt.templates.link_description = (link) => {
+  const from = gantt.getTask(link.source).text, to = gantt.getTask(link.target).text;
+  const text = `Delete the link from <br/> ${from} to ${to}`;
+  return text;
+};
+
 // parses the date of the deadline and if the task has one and returns true
 gantt.attachEvent('onTaskLoading', (task) => {
   if (task.deadline) {
@@ -123,10 +130,19 @@ gantt.attachEvent('onTaskLoading', (task) => {
 });
 
 // preventing the default behavior on task double click i.e. lightbox appears
-gantt.attachEvent('onTaskDblClick', (task, e) => {
-  e.preventDefault();
-});
+gantt.attachEvent('onTaskDblClick', (task, e) => false);
 
+// triggering a delete link dialog if the user clicks on a link
+gantt.attachEvent('onLinkClick', (task, e) => {
+  const link = gantt.getLink(task);
+  const a = '';
+  const i = gantt.templates.link_description(gantt.getLink(task));
+  window.setTimeout(() => {
+    gantt._dhtmlx_confirm(i, a, () => {
+      gantt.deleteLink(link.id);
+    });
+  }, 300);
+});
 
 // validating that the task has both a name and has been assigned
 gantt.attachEvent('onLightBoxSave', (id, task) => {
@@ -146,6 +162,8 @@ gantt.locale.labels.deadline_enable_button = 'Set';
 gantt.locale.labels.deadline_disable_button = 'Remove';
 gantt.locale.labels.section_deadline = 'Deadline';
 gantt.locale.labels.section_assigned = 'Assigned To';
+gantt.locale.labels.link = 'Link';
+gantt.locale.labels.confirm_link_deleting = 'Ok';
 
 // caculating the task duration for the lightbox
 const duration = (begin, end, total) => {
