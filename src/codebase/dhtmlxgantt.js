@@ -8201,7 +8201,7 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
     weeks: "Week",
     months: "Months",
     years: "Years",
-    message_ok: "OK",
+    message_ok: "Delete",
     message_cancel: "Cancel"
   }
 }), (gantt.skins.skyblue = {

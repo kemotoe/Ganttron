@@ -116,7 +116,8 @@ gantt.templates.rightside_text = (start, end, task) => {
 
 // template for specifying the message
 gantt.templates.link_description = (link) => {
-  const from = gantt.getTask(link.source).text, to = gantt.getTask(link.target).text;
+  const from = gantt.getTask(link.source).text;
+  const to = gantt.getTask(link.target).text;
   const text = `Delete the link from <br/> ${from} to ${to}`;
   return text;
 };

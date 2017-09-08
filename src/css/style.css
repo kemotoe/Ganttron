@@ -113,6 +113,15 @@ label {
   opacity: 1;
 }
 
+.gantt_popup_button.gantt_delete_button {
+  background: #dc3545;
+  opacity: 0.8;
+}
+
+.gantt_popup_button.gantt_delete_button:hover {
+  opacity: 1;
+}
+
 .deadline {
   position: absolute;
   border-radius: 12px;
