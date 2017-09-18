@@ -163,8 +163,6 @@ gantt.locale.labels.deadline_enable_button = 'Set';
 gantt.locale.labels.deadline_disable_button = 'Remove';
 gantt.locale.labels.section_deadline = 'Deadline';
 gantt.locale.labels.section_assigned = 'Assigned To';
-gantt.locale.labels.link = 'Link';
-gantt.locale.labels.confirm_link_deleting = 'Ok';
 
 // caculating the task duration for the lightbox
 const duration = (begin, end, total) => {
@@ -240,9 +238,25 @@ gantt.form_blocks.dhx_calendar = {
   focus: (node) => {},
 };
 
-// TODO: render a calendar for deadline input
+// renders a calendar for deadline input
 gantt.form_blocks.dhx_calendar2 = {
+  render: () => `<div class='dhx_calendar_cont'><input type='text' readonly='true' id='calendar3'/>
+                </div>`,
+  set_value: (node, value, task, data) => {
+    let a = (node.calStart = calendarInit('calendar3', data, task.deadline));
+    const id = gantt.attachEvent('onAfterLightbox', function detach() {
+      a.unload();
+      a = null;
+      this.detachEvent(id);
+    });
 
+    document.getElementById('calendar3').value = a.getDate(true);
+  },
+  get_value: (node, task) => {
+    task.deadline = node.calStart.getDate(false);
+    return task;
+  },
+  focus: (node) => {},
 };
 
 // configuring the lightbox fields
@@ -250,10 +264,10 @@ gantt.config.lightbox.sections = [
   { name: 'description', height: 50, map_to: 'text', type: 'textarea', focus: true },
   { name: 'assigned', height: 35, map_to: 'assigned', type: 'textarea' },
   { name: 'time', map_to: 'auto', type: 'dhx_calendar', skin: '', date_format: '%d %M %Y' },
-  { name: 'deadline', map_to: { start_date: 'deadline' }, type: 'duration_optional', button: true, single_date: true },
+  { name: 'deadline', map_to: 'auto', type: 'dhx_calendar2', skin: '', date_format: '%d %M %Y' },
 ];
 
-// configuring the time scale for the gantt chart may refactor in the future
+// configuring the time scale for the gantt chart
 // top level month, year
 gantt.config.scale_unit = 'month';
 gantt.config.step = 1;
