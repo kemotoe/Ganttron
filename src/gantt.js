@@ -125,7 +125,7 @@ gantt.templates.link_description = (link) => {
 // parses the date of the deadline and if the task has one and returns true
 gantt.attachEvent('onTaskLoading', (task) => {
   if (task.deadline) {
-    task.deadline = gantt.date.parseDate(task.deadline, 'xml_date');
+    task.deadline = gantt.date.parseDate(task.deadline, '%d, %M, %Y');
   }
   return true;
 });
@@ -243,7 +243,7 @@ gantt.form_blocks.dhx_calendar2 = {
   render: () => `<div class='dhx_calendar_cont'><input type='text' readonly='true' id='calendar3'/>
                 </div>`,
   set_value: (node, value, task, data) => {
-    let a = (node.calStart = calendarInit('calendar3', data, task.deadline));
+    let a = (node.calStart = calendarInit('calendar3', data, task.deadline === null ? task.end_date : task.deadline));
     const id = gantt.attachEvent('onAfterLightbox', function detach() {
       a.unload();
       a = null;
@@ -253,7 +253,7 @@ gantt.form_blocks.dhx_calendar2 = {
     document.getElementById('calendar3').value = a.getDate(true);
   },
   get_value: (node, task) => {
-    task.deadline = node.calStart.getDate(false);
+    task.deadline = gantt.date.date_part(node.calStart.getDate(false));
     return task;
   },
   focus: (node) => {},
