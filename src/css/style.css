@@ -154,7 +154,7 @@ label {
 .dhx_calendar_cont input:focus {
   outline: none;
   border: 1px solid #3db9d3;
-  box-shadow: 0 0 2px #3db9d3; 
+  box-shadow: 0 0 2px #3db9d3;
 }
 
 .dhtmlxcalendar_material {

@@ -319,6 +319,21 @@ const clickGridButton = (id, action) => {
   }
 };
 
+// function that takes a name parameter from onclick and loads the correct stylesheet
+// and replaces it
+const changeSkin = (name) => {
+  const link = document.createElement('link');
+  link.onload = () => {
+    gantt.resetSkin();
+    gantt.config.scale_height = 80;
+    gantt.render();
+  };
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link.id = 'skin';
+  link.href = `../src/codebase/skins/dhtmlxgantt_${name}.css`;
+  document.head.replaceChild(link, document.querySelector('#skin'));
+};
 
 // function that clears all tasks from current gantt
 const clearGantt = () => {
@@ -337,22 +352,6 @@ const clearGantt = () => {
       }
     },
   );
-};
-
-// function that takes a name parameter from onclick and loads the correct stylesheet
-// and replaces it
-const changeSkin = (name) => {
-  const link = document.createElement('link');
-  link.onload = () => {
-    gantt.resetSkin();
-    gantt.config.scale_height = 80;
-    gantt.render();
-  };
-  link.rel = 'stylesheet';
-  link.type = 'text/css';
-  link.id = 'skin';
-  link.href = `../src/codebase/skins/dhtmlxgantt_${name}.css`;
-  document.head.replaceChild(link, document.querySelector('#skin'));
 };
 
 // dirty quicksave
