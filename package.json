@@ -31,7 +31,8 @@
                 ]
             },
             "electronPackagerConfig": {
-                "packageManager": "yarn"
+                "packageManager": "yarn",
+                "icon": "./src/img/gantt.ico"
             },
             "electronWinstallerConfig": {
                 "name": "Ganttron"

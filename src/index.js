@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 
+const { setMainMenu } = require('./menu.js');
 
 require('electron-context-menu')({
   showInpsectElement: true,
@@ -16,12 +17,13 @@ const createWindow = () => {
     minWidth: 1366,
     minHeight: 768,
     title: 'Ganttron',
-    icon: `${__dirname}/img/gantt.png.ico`,
+    icon: `${__dirname}/img/gantt.ico`,
   });
 
   // Load the index.html of the app maximize the window before loading the page
   mainWindow.maximize();
   mainWindow.loadURL(`file://${__dirname}/index.html`);
+  setMainMenu(mainWindow);
   // Wait for window to load before we show
   mainWindow.on('ready-to-show', () => {
     mainWindow.show();

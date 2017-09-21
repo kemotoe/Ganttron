@@ -1,16 +1,19 @@
 import fs from 'fs';
 import path from 'path';
-import electron from 'electron';
+import electron, { remote } from 'electron';
 
+// dialog variable
 const { dialog } = electron.remote;
-
+// variable used to store if a file has been loaded
 let quickSaveFileName;
+// variable that will return a current window BroswerWindow object
+const win = remote.getCurrentWindow();
 
 // creating a template for the 'buttons' section of the grid
-const colHeader = '<div class="gantt_grid_head_cell gantt_grid_head_add" onclick="gantt.createTask()"></div>',
-  colContent = task => `<i class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="clickGridButton(${task.id}, 'edit')"></i>
-                        <i class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="clickGridButton(${task.id}, 'add')"></i>
-                        <i class="fa gantt_button_grid gantt_grid_delete fa-times" onclick="clickGridButton(${task.id}, 'delete')"></i>`;
+const colHeader = '<div title="Add New Task" class="gantt_grid_head_cell gantt_grid_head_add" onclick="gantt.createTask()"></div>',
+  colContent = task => `<i title="Edit Task" class="fa gantt_button_grid gantt_grid_edit fa-pencil" onclick="clickGridButton(${task.id}, 'edit')"></i>
+                        <i title="Add Child Task" class="fa gantt_button_grid gantt_grid_add fa-plus" onclick="clickGridButton(${task.id}, 'add')"></i>
+                        <i title="Delete Task" class="fa gantt_button_grid gantt_grid_delete fa-times" onclick="clickGridButton(${task.id}, 'delete')"></i>`;
 
 // configuring the columns within the grid
 gantt.config.columns = [
@@ -71,9 +74,6 @@ gantt.config.columns = [
     return '';
   };
 })();
-
-// custom grid width
-gantt.config.grid_width = 500;
 
 // logic for applying the deadline icon on the task
 gantt.addTaskLayer((task) => {
@@ -267,6 +267,7 @@ gantt.config.lightbox.sections = [
   { name: 'deadline', map_to: 'auto', type: 'dhx_calendar2', skin: '', date_format: '%d %M %Y' },
 ];
 
+
 // configuring the time scale for the gantt chart
 // top level month, year
 gantt.config.scale_unit = 'month';
@@ -287,6 +288,8 @@ gantt.config.order_branch = true;
 gantt.config.work_time = true;
 gantt.config.skip_off_time = true;
 
+// custom grid width
+gantt.config.grid_width = 500;
 
 // initialize the configured gantt chart
 gantt.init('gantt');
@@ -338,12 +341,12 @@ const changeSkin = (name) => {
 // function that clears all tasks from current gantt
 const clearGantt = () => {
   dialog.showMessageBox(
+    win,
     {
-      type: 'none',
+      type: 'warning',
       title: 'Ganttron',
       message: 'This will clear the gantt chart and erase all data',
       buttons: ['Cancel', 'OK'],
-      icon: path.join(__dirname, 'img/gantt.png.ico'),
     },
     (response) => {
       if (response === 1) {
@@ -360,6 +363,7 @@ const quickSave = () => {
   saveData = JSON.stringify(saveData, null, '\t');
   if (quickSaveFileName === undefined || quickSaveFileName === null) {
     dialog.showSaveDialog(
+      win,
       {
         defaultPath: `C:\\Users\\${process.env.USERNAME}\\Documents\\`,
         filters: [
@@ -376,33 +380,41 @@ const quickSave = () => {
         fs.writeFile(filename, content, (error) => {
           if (error) {
             dialog.showErrorBox(
+              win,
               'Save Failed',
               `An error occured saving the file ${error.message}`,
             );
             return;
           }
-          dialog.showMessageBox({
-            type: 'none',
-            title: 'Ganttron',
-            message: 'The chart was successfully saved',
-            buttons: ['OK'],
-          });
+          dialog.showMessageBox(
+            win,
+            {
+              type: 'none',
+              title: 'Ganttron',
+              message: 'The chart was successfully saved',
+              buttons: ['OK'],
+            },
+          );
         });
       });
   } else {
     fs.writeFile(quickSaveFileName, saveData, (error) => {
       if (error) {
         dialog.showErrorBox(
+          win,
           'Save Failed',
           `An error occured saving the file ${error.message}`,
         );
       }
-      dialog.showMessageBox({
-        type: 'none',
-        title: 'Ganttron',
-        message: 'The chart was successfully saved',
-        buttons: ['OK'],
-      });
+      dialog.showMessageBox(
+        win,
+        {
+          type: 'none',
+          title: 'Ganttron',
+          message: 'The chart was successfully saved',
+          buttons: ['OK'],
+        },
+      );
     });
   }
 };
@@ -414,6 +426,7 @@ const saveGantt = () => {
   let content = gantt.serialize();
   content = JSON.stringify(content, null, '\t');
   dialog.showSaveDialog(
+    win,
     {
       defaultPath: `C:\\Users\\${process.env.USERNAME}\\Documents\\`,
       filters: [
@@ -430,17 +443,21 @@ const saveGantt = () => {
       fs.writeFile(filename, content, (err) => {
         if (err) {
           dialog.showErrorBox(
+            win,
             'Save Failed',
             `An error occured saving the file ${err.message}`,
           );
           return;
         }
-        dialog.showMessageBox({
-          type: 'none',
-          title: 'Ganttron',
-          message: 'The chart was successfully saved',
-          buttons: ['OK'],
-        });
+        dialog.showMessageBox(
+          win,
+          {
+            type: 'none',
+            title: 'Ganttron',
+            message: 'The chart was successfully saved',
+            buttons: ['OK'],
+          },
+        );
       });
     },
   );
@@ -451,8 +468,9 @@ const saveGantt = () => {
 // the gantt api
 const loadGantt = () => {
   dialog.showMessageBox(
+    win,
     {
-      type: 'none',
+      type: 'warning',
       title: 'Ganttron',
       message: 'This will clear the gantt chart and load new data',
       buttons: ['Cancel', 'OK'],
@@ -461,6 +479,7 @@ const loadGantt = () => {
       if (response === 1) {
         gantt.clearAll();
         dialog.showOpenDialog(
+          win,
           {
             defaultPath: `C:\\Users\\${process.env.USERNAME}\\Documents`,
             filters: [
@@ -478,6 +497,7 @@ const loadGantt = () => {
               quickSaveFileName = fileName[0].toString();
               if (err) {
                 dialog.showErrorBox(
+                  win,
                   'Load Failed',
                   `Cannot read file ${err.message}`,
                 );

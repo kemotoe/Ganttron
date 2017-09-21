@@ -50,10 +50,6 @@ label {
   height: 92vh;
 }
 
-.gantt_cell {
-  cursor: pointer;
-}
-
 .gantt_task_progress {
   text-align: left;
   padding-left: 10px;
