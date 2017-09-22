@@ -3,6 +3,7 @@
   "rules": {
     "import/extensions": 0,
     "import/no-extraneous-dependencies": 0,
+    "import/prefer-default-export": 0,
     "import/no-unresolved": [2, { "ignore": ["electron"] }],
     "linebreak-style": 0,
     "one-var": 0,
@@ -14,7 +15,7 @@
     "no-multi-assign": 0,
     "max-len": 0,
     "no-plusplus": 0,
-    "no-underscore-dangle": 0
+    "no-underscore-dangle": 0,
   },
   "globals": {
     "document": true,

@@ -1,7 +1,7 @@
 import { app, Menu } from 'electron';
 
 //
-const setMainMenu = () => {
+export const setMainMenu = () => {
   const template = [
     {
       label: 'File',
@@ -36,8 +36,4 @@ const setMainMenu = () => {
   ];
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
-};
-
-module.exports = {
-  setMainMenu,
 };

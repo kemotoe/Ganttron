@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 
-const { setMainMenu } = require('./menu.js');
+import { setMainMenu } from './menu.js';
 
 require('electron-context-menu')({
   showInpsectElement: true,
