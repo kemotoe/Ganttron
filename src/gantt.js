@@ -19,8 +19,8 @@ const colHeader = '<div title="Add New Task" class="gantt_grid_head_cell gantt_g
 gantt.config.columns = [
   {
     name: 'overdue',
-    label: '',
-    width: 30,
+    label: 'Status',
+    width: 40,
     template: (obj) => {
       if (obj.deadline) {
         const deadline = gantt.date.parseDate(obj.deadline, 'xml_date');

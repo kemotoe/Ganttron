@@ -6,17 +6,30 @@ export const setMainMenu = () => {
     {
       label: 'File',
       submenu: [
-        { label: 'New Gantt' },
+        {
+          label: 'New Gantt',
+          click: () => {
+
+          },
+        },
         { label: 'Open Gantt' },
         { type: 'separator' },
         { label: 'Save' },
         { label: 'Save As...' },
+        { type: 'separator' },
+        { role: 'quit' },
       ],
     },
     {
       label: 'Edit',
       submenu: [
-        { role: 'undo' },
+        {
+          label: 'Undo',
+          accelerator: 'CmdOrCtrl+Z',
+          click: () => {
+            gantt.undo();
+          },
+        },
         { role: 'redo' },
         { type: 'separator' },
       ],
