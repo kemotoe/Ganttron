@@ -1,5 +1,6 @@
 import { app, Menu } from 'electron';
 
+
 //
 export const setMainMenu = () => {
   const template = [
@@ -7,9 +8,10 @@ export const setMainMenu = () => {
       label: 'File',
       submenu: [
         {
-          label: 'New Gantt',
+          label: 'Clear Gantt',
+          accelerator: 'CmdOrCtrl+N',
           click: () => {
-
+            console.log('clear');
           },
         },
         { label: 'Open Gantt' },
@@ -27,7 +29,7 @@ export const setMainMenu = () => {
           label: 'Undo',
           accelerator: 'CmdOrCtrl+Z',
           click: () => {
-            gantt.undo();
+            console.log('undo');
           },
         },
         { role: 'redo' },

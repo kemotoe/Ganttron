@@ -4,6 +4,7 @@ import electron, { remote } from 'electron';
 
 // dialog variable
 const { dialog } = electron.remote;
+
 // variable used to store if a file has been loaded
 let quickSaveFileName;
 // variable that will return a current window BroswerWindow object
@@ -20,7 +21,7 @@ gantt.config.columns = [
   {
     name: 'overdue',
     label: 'Status',
-    width: 40,
+    width: 45,
     template: (obj) => {
       if (obj.deadline) {
         const deadline = gantt.date.parseDate(obj.deadline, 'xml_date');
@@ -232,7 +233,7 @@ gantt.form_blocks.dhx_calendar = {
   },
   get_value: (node, task) => {
     task.start_date = node.calStart.getDate(false);
-    task.end_date = node.calEnd.getDate(false);
+    task.end_date = gantt.date.date_part(node.calEnd.getDate(false));
     return task;
   },
   focus: (node) => {},
@@ -511,3 +512,4 @@ const loadGantt = () => {
     },
   );
 };
+
