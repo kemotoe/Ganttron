@@ -9,45 +9,106 @@ label {
   display: inline;
 }
 
+:focus {
+  outline: none;
+}
+
 .taskbar {
-  height: 8vh;
+  height: 80px;
 }
 
-.taskbar .btn {
-  margin-top: 12px;
-  margin-left: 20px;
-  margin-right: 20px;
-  border-radius: 20px;
+.open {
+  display: inline-block;
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 40px;
+  padding: 5px;
+  text-align: center;
 }
 
-.taskbar .btn:hover {
+.open:hover {
+  cursor: pointer;
+  color: #000;
+}
+
+.open:hover > .fa-folder-o::before {
+  content: "\f115";
   cursor: pointer;
 }
 
-.taskbar .dropdown .btn-outline-dark {
-  float: right;
+.fa-folder-o {
+  color: #939393;
+  vertical-align: middle;
+  font-size: 40px;
 }
 
-.dropdown-menu {
-  margin-top: 0.313rem;
-  padding: 0;
+.open-text {
+  font-size: 14px;
+  display: block;
+  color: #000;
 }
 
-.dropdown-menu.show {
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+.save {
+  display: inline-block;
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 40px;
+  padding: 5px;
+  text-align: center;
 }
 
-.dropdown-item {
+.save:hover {
   cursor: pointer;
 }
 
-.dropdown-item:hover {
-  background-color: #c6c7c8;
+.save:hover > .fa-floppy-o::before {
+  font-size: 40px;
+}
+
+.fa-floppy-o {
+  color: #939393;
+  vertical-align: middle;
+  font-size: 36px;
+}
+
+.save-text {
+  font-size: 14px;
+  display: block;
+  color: #000;
+}
+
+.save-as {
+  display: inline-block;
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 50px;
+  padding: 5px;
+  text-align: center;
+}
+
+.save-as:hover {
+  cursor: pointer;
+}
+
+.save-as:hover > .fa-hdd-o::before {
+  font-size: 40px;
+}
+
+.fa-hdd-o {
+  color: #939393;
+  vertical-align: middle;
+  font-size: 36px;
+}
+
+.save-as-text {
+  font-size: 14px;
+  display: block;
+  color: #000;
 }
 
 #gantt {
   width: 100%;
-  height: 92vh;
+  height: 100%;
 }
 
 .gantt_task_progress {
@@ -183,26 +244,41 @@ label {
   font-size: 18px;
 }
 
-.fa {
+.fa-pencil {
   cursor: pointer;
   font-size: 14px;
   text-align: center;
   opacity: 0.5;
   padding: 5px;
-}
-
-.fa:hover {
-  opacity: 1;
-}
-
-.fa-pencil {
   color: #ffa011;
 }
 
+.fa-pencil:hover {
+  opacity: 1;
+}
+
 .fa-plus {
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  opacity: 0.5;
+  padding: 5px;
   color: #328ea0;
 }
 
+.fa-plus:hover {
+  opacity: 1;
+}
+
 .fa-times {
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  opacity: 0.5;
+  padding: 5px;
   color: #dc3545;
+}
+
+.fa-times:hover {
+  opacity: 1;
 }

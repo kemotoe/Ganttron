@@ -5,24 +5,6 @@ import { app, Menu } from 'electron';
 export const setMainMenu = () => {
   const template = [
     {
-      label: 'File',
-      submenu: [
-        {
-          label: 'Clear Gantt',
-          accelerator: 'CmdOrCtrl+N',
-          click: () => {
-            console.log('clear');
-          },
-        },
-        { label: 'Open Gantt' },
-        { type: 'separator' },
-        { label: 'Save' },
-        { label: 'Save As...' },
-        { type: 'separator' },
-        { role: 'quit' },
-      ],
-    },
-    {
       label: 'Edit',
       submenu: [
         {
