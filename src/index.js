@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 
 import { setMainMenu } from './menu';
 
@@ -9,6 +9,7 @@ require('electron-context-menu')({
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let newWindow;
 
 const createWindow = () => {
   // Create the browser window set show to false and load our icon
@@ -62,5 +63,33 @@ app.on('activate', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+// Opens new window
+ipcMain.on('open-new', () => {
+  // Create the browser window set show to false and load our icon
+  newWindow = new BrowserWindow({
+    show: false,
+    minWidth: 1366,
+    minHeight: 768,
+    title: 'Ganttron',
+    icon: `${__dirname}/img/gantt.ico`,
+  });
+
+  // Load the index.html of the app maximize the window before loading the page
+  newWindow.loadURL(`file://${__dirname}/index.html`);
+  setMainMenu(newWindow);
+  // Wait for window to load before we show
+  newWindow.on('ready-to-show', () => {
+    newWindow.show();
+    newWindow.focus();
+  });
+
+
+  // Emitted when the window is closed.
+  newWindow.on('closed', () => {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    newWindow = null;
+  });
+});
+

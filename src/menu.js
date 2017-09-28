@@ -1,21 +1,62 @@
-import { app, Menu } from 'electron';
+import { app, Menu, BrowserWindow } from 'electron';
 
 
 //
 export const setMainMenu = () => {
   const template = [
     {
+      label: 'File',
+      submenu: [
+        {
+          label: 'New Gantt...',
+          accelerator: 'CmdOrCtrl+N',
+          click: () => {
+            const focusedWindow = BrowserWindow.getFocusedWindow();
+            focusedWindow.webContents.send('new-gantt');
+          },
+        },
+        {
+          label: 'New Window',
+          accelerator: 'CmdOrCtrl+Shift+N',
+          click: () => {
+            const focusedWindow = BrowserWindow.getFocusedWindow();
+            focusedWindow.webContents.send('open-new');
+          },
+        },
+        { type: 'separator' },
+        { label: 'Save' },
+        { label: 'Save As...' },
+        { type: 'separator' },
+        { role: 'quit' },
+      ],
+    },
+    {
       label: 'Edit',
       submenu: [
+        {
+          label: 'Clear Gantt',
+          accelerator: 'CmdOrCtrl+N',
+          click: () => {
+            const focusedWindow = BrowserWindow.getFocusedWindow();
+            focusedWindow.webContents.send('clear-gantt');
+          },
+        },
         {
           label: 'Undo',
           accelerator: 'CmdOrCtrl+Z',
           click: () => {
-            console.log('undo');
+            const focusedWindow = BrowserWindow.getFocusedWindow();
+            focusedWindow.webContents.send('undo');
           },
         },
-        { role: 'redo' },
-        { type: 'separator' },
+        {
+          label: 'Redo',
+          accelerator: 'CmdOrCtrl+Y',
+          click: () => {
+            const focusedWindow = BrowserWindow.getFocusedWindow();
+            focusedWindow.webContents.send('redo');
+          },
+        },
       ],
     },
     {

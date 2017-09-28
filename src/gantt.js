@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import electron, { remote } from 'electron';
+import electron, { remote, ipcRenderer } from 'electron';
 
 // dialog variable
 const { dialog } = electron.remote;
@@ -26,10 +26,10 @@ gantt.config.columns = [
       if (obj.deadline) {
         const deadline = gantt.date.parseDate(obj.deadline, 'xml_date');
         if (deadline && obj.end_date > deadline) {
-          return '<div class="overdue-indicator">!</div>';
+          return '<div class="overdue-indicator" title="Overdue">!</div>';
         }
         if (deadline && obj.end_date <= deadline) {
-          return '<div class="not-overdue">!</div>';
+          return '<div class="not-overdue" title="On Task">!</div>';
         }
       }
       return '<div></div>';
@@ -38,7 +38,7 @@ gantt.config.columns = [
   { name: 'text', label: 'Task Name', width: '*', tree: true, resize: true },
   { name: 'start_date', label: 'Start Time', template: obj => gantt.templates.date_grid(obj.start_date), align: 'center', width: '80' },
   { name: 'deadline', label: 'Deadline', align: 'center', width: '80', template: (obj) => { if (!obj.deadline) { return 'None'; } return obj.deadline; } },
-  { name: 'duration', label: 'Duration', align: 'center', width: '60' },
+  { name: 'duration', label: 'Duration', align: 'center', width: '50' },
   { name: 'buttons', label: colHeader, width: 75, template: colContent },
 ];
 
@@ -340,7 +340,7 @@ const changeSkin = (name) => {
 };
 
 // function that clears all tasks from current gantt
-const clearGantt = () => {
+ipcRenderer.on('new-gantt', () => {
   dialog.showMessageBox(
     win,
     {
@@ -356,7 +356,7 @@ const clearGantt = () => {
       }
     },
   );
-};
+});
 
 // dirty quicksave
 const quickSave = () => {
@@ -467,7 +467,7 @@ const saveGantt = () => {
 // function that loads a gantt project uses the dialog api to open a JSON file from
 // the users computer then it is parsed to return a JSON object that is then parsed by
 // the gantt api
-const loadGantt = () => {
+ipcRenderer.on('open-gantt', () => {
   dialog.showMessageBox(
     win,
     {
@@ -511,5 +511,9 @@ const loadGantt = () => {
       }
     },
   );
-};
+});
+
+ipcRenderer.on('open-new', () => {
+  ipcRenderer.send('open-new');
+});
 
