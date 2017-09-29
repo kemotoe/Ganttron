@@ -35,10 +35,10 @@ gantt.config.columns = [
       return '<div></div>';
     },
   },
-  { name: 'text', label: 'Task Name', width: '*', tree: true, resize: true },
+  { name: 'text', label: 'Task Name', width: '*', tree: true },
   { name: 'start_date', label: 'Start Time', template: obj => gantt.templates.date_grid(obj.start_date), align: 'center', width: '80' },
   { name: 'deadline', label: 'Deadline', align: 'center', width: '80', template: (obj) => { if (!obj.deadline) { return 'None'; } return obj.deadline; } },
-  { name: 'duration', label: 'Duration', align: 'center', width: '50' },
+  { name: 'duration', label: 'Duration', align: 'center', width: '55' },
   { name: 'buttons', label: colHeader, width: 75, template: colContent },
 ];
 
@@ -291,6 +291,8 @@ gantt.config.skip_off_time = true;
 
 // custom grid width
 gantt.config.grid_width = 500;
+gantt.config.grid_resize = true;
+
 
 // initialize the configured gantt chart
 gantt.init('gantt');
@@ -358,8 +360,8 @@ ipcRenderer.on('new-gantt', () => {
   );
 });
 
-// dirty quicksave
-const quickSave = () => {
+// quicksave function that uses quickSaveFilename to track if a file has been loaded
+ipcRenderer.on('save', () => {
   let saveData = gantt.serialize();
   saveData = JSON.stringify(saveData, null, '\t');
   if (quickSaveFileName === undefined || quickSaveFileName === null) {
@@ -418,12 +420,12 @@ const quickSave = () => {
       );
     });
   }
-};
+});
 
 // function for saving a gantt project projects are serialized into a JSON file
 // the JSON is then stringified for human readiblity then thru the dialog api is saved to
 // users computer
-const saveGantt = () => {
+ipcRenderer.on('save-as', () => {
   let content = gantt.serialize();
   content = JSON.stringify(content, null, '\t');
   dialog.showSaveDialog(
@@ -462,12 +464,12 @@ const saveGantt = () => {
       });
     },
   );
-};
+});
 
 // function that loads a gantt project uses the dialog api to open a JSON file from
 // the users computer then it is parsed to return a JSON object that is then parsed by
 // the gantt api
-ipcRenderer.on('open-gantt', () => {
+ipcRenderer.on('open-file', () => {
   dialog.showMessageBox(
     win,
     {
@@ -517,3 +519,7 @@ ipcRenderer.on('open-new', () => {
   ipcRenderer.send('open-new');
 });
 
+ipcRenderer.on('close', () => {
+  const window = remote.getCurrentWindow();
+  window.close();
+});
