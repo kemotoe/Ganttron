@@ -8,7 +8,7 @@ export const setMainMenu = () => {
       label: 'File',
       submenu: [
         {
-          label: 'New Gantt...',
+          label: 'New File',
           accelerator: 'CmdOrCtrl+N',
           click: () => {
             const focusedWindow = BrowserWindow.getFocusedWindow();
@@ -38,9 +38,6 @@ export const setMainMenu = () => {
             const focusedWindow = BrowserWindow.getFocusedWindow();
             focusedWindow.webContents.send('open-file');
           },
-        },
-        {
-          label: 'Open Recent',
         },
         { type: 'separator' },
         {
@@ -100,3 +97,4 @@ export const setMainMenu = () => {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 };
+

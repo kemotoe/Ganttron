@@ -523,3 +523,11 @@ ipcRenderer.on('close', () => {
   const window = remote.getCurrentWindow();
   window.close();
 });
+
+ipcRenderer.on('undo', () => {
+  gantt.undo();
+});
+
+ipcRenderer.on('redo', () => {
+  gantt.redo();
+});

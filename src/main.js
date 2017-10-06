@@ -21,6 +21,8 @@ const createWindow = () => {
     icon: `${__dirname}/img/gantt.ico`,
   });
 
+  mainWindow.webContents.openDevTools();
+
   // Load the index.html of the app maximize the window before loading the page
   mainWindow.maximize();
   mainWindow.loadURL(`file://${__dirname}/index.html`);
