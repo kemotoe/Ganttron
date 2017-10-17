@@ -15,13 +15,10 @@ const createWindow = () => {
   // Create the browser window set show to false and load our icon
   mainWindow = new BrowserWindow({
     show: false,
-    minWidth: 1366,
-    minHeight: 768,
     title: 'Ganttron',
     icon: `${__dirname}/img/gantt.ico`,
   });
 
-  mainWindow.webContents.openDevTools();
 
   // Load the index.html of the app maximize the window before loading the page
   mainWindow.maximize();
@@ -70,8 +67,6 @@ ipcMain.on('open-new', () => {
   // Create the browser window set show to false and load our icon
   newWindow = new BrowserWindow({
     show: false,
-    minWidth: 1366,
-    minHeight: 768,
     title: 'Ganttron',
     icon: `${__dirname}/img/gantt.ico`,
   });
