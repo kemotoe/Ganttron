@@ -1732,15 +1732,15 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
   }
 }),(gantt._scale_helpers.processIgnores = function(e) {
       var i = e.count;
-        if (e.ignore_x = {}, gantt.ignore_time || gantt.config.skip_off_time) {
-          var n = gantt.ignore_time || function() {
-            return !1
-          };
-          i = 0;
-          for (var a = 0; a < e.trace_x.length; a++) n.call(gantt, e.trace_x[a]) || this._ignore_time_config.call(gantt, e.trace_x[a], e) ? (e.ignore_x[e.trace_x[a].valueOf()] = !0,
-            e.ignored_colls = !0) : i++
-        }
-        e.display_count = i
+      if (e.ignore_x = {}, gantt.ignore_time || gantt.config.skip_off_time) {
+        var n = gantt.ignore_time || function() {
+          return !1
+        };
+        i = 0;
+        for (var a = 0; a < e.trace_x.length; a++) n.call(gantt, e.trace_x[a]) || this._ignore_time_config.call(gantt, e.trace_x[a], e) ? (e.ignore_x[e.trace_x[a].valueOf()] = !0,
+          e.ignored_colls = !0) : i++
+      }
+      e.display_count = i
 }),(gantt._tasks_dnd = {
   drag: null,
   _events: { before_start: {}, before_finish: {}, after_finish: {} },
@@ -3241,7 +3241,7 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
             (e.className = t), (e.style.cssText = ["height:" + a + "px", "line-height:" + a + "px"].join(";"));
             var n = document.createElement("div");
             return (n.className =
-              "gantt_link_point"), (n.style.display = gantt._show_link_points ? "block" : ""), e.appendChild(n), e;
+              "gantt_link_point", n.title = "Link Task"), (n.style.display = gantt._show_link_points ? "block" : ""), e.appendChild(n), e;
           })
       ), s;
   }
@@ -3292,7 +3292,7 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
       t.start_date,
       t.end_date,
       t
-    )), (n.className = "gantt_task_content"), n;
+    )), (n.className = "gantt_task_content", n.title = "Click for more info"), n;
 }), (gantt._render_task_progress = function(t, e, n) {
   var a = 1 * t.progress || 0;
   n = Math.max(n - 2, 0);
@@ -3312,7 +3312,7 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
   ) {
     var r = document.createElement("div");
     (r.style.left = s + "px"), (r.className =
-      "gantt_task_progress_drag"), i.appendChild(r), e.appendChild(r);
+      "gantt_task_progress_drag", r.title = "Progress Meter"), i.appendChild(r), e.appendChild(r);
   }
 }), (gantt._get_line = function(t) {
   var e = {

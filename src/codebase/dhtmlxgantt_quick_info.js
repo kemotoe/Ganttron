@@ -38,6 +38,7 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
     return n.text.substr(0, 50);
   }),
   (gantt.templates.quick_info_content = function(t, e, n) {
+    console.log(n);
     return `Assigned to: ${n.assigned}<br>
             Deadline: ${n.deadline !== null ? n.deadline.toString().slice(0, 15) : 'No Deadline'}<br>
             Progress: ${n.progress !== undefined ? `${Math.trunc(n.progress * 100)}%` : 'No progress'}<br>
